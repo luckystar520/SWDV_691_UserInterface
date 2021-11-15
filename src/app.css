@@ -1,0 +1,108 @@
+.page_width {
+    width: 1000px;
+    margin: auto;
+}
+
+button {
+    background-color: rgb(255, 165, 0);
+    font-weight: bold;
+    border: 1px solid #1945d6;
+    border-radius: 5px;
+    padding: 10px;
+    color: #1945d6;
+    font-size: 12px;
+}
+
+button:hover {
+    opacity: 0.8;
+}
+
+textarea {
+    background-color: white;
+    outline: none;
+}
+
+.navbar {
+    color: #1945d6;
+    background-color: orange;
+    overflow: auto;
+    position: fixed;
+    bottom: 30px;
+    float: center;
+}
+
+.navbar a {
+    font: "Roboto";
+    float: left;
+    display: block;
+    color: #1945d6;
+    text-align: center;
+    padding: 35px 35px;
+    text-decoration: none;
+    font-size: 26px;
+    font-weight: bold;
+}
+
+.navbar a:hover {
+    background: #04AA6D;
+    color: #1945d6;
+}
+
+.center {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100px;
+}
+
+.header {
+    background-color: orange;
+    margin-bottom: 50px;
+    margin-top: 30px;
+    padding: 20px 0 20px 20px;
+    text-transform: uppercase;
+    letter-spacing: 4px;
+}
+
+.header h1 {
+    color: #1945d6;
+    font-weight: bold;
+}
+
+.login {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0, 0, 0);
+    background-color: rgba(0, 0, 0, 0.4);
+    /* Black w/ opacity */
+    padding-top: 60px;
+}
+
+.login_form {
+    background-color: #fefefe;
+    margin: 20% auto 20% auto;
+    border: 1px solid #888;
+    width: 50%;
+}
+
+.container {
+    padding: 20px;
+}
+
+input[type=text],
+input[type=password] {
+    width: 100%;
+    padding: 12px 20px;
+    margin: 12px 0;
+    display: inline-block;
+    border: 1px solid #ccc;
+    box-sizing: border-box;
+    border-radius: 5px;
+}
