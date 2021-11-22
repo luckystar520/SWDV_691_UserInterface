@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<meta http-equiv="Cache-control" content="no-cache">
+    <title>Paste Board</title>
+    <link href="app.css" rel="stylesheet" />
+
+    <script src="js/jquery-3.6.0.min.js"></script>
+
+    <script>
+        function getAccessTokenFromUrl() {
+            var access_token = "";
+
+            var href = window.location.href;
+
+            if (href.indexOf('#') <= 0) {
+                return access_token; // no tokens
+            }
+
+            href = href.substring(href.indexOf('#'));
+            var href_parts = href.split("&");
+
+            for (var i = 0; i < href_parts.length; i++) {
+                var href_part = href_parts[i];
+                console.log(href_part);
+                if (href_part.startsWith("access_token=")) {
+                    access_token = href_part.substring("access_token=".length);
+                }
+            }
+			
+			console.log("1234");
+			var url = window.location.href;
+			console.log(url.substring(0, url.indexOf('#')));
+			window.location = url.substring(0, url.indexOf('#'));
+
+            return access_token;
+        }
+
+        function getUserInfoFromAccessToken(access_token) {
+            console.log("getUserInfoFromAccessToken: " + access_token);
+            if (!access_token) {
+                $("#welcome_user").hide();
+                $("#login_user").show();
+                return null;
+            }
+
+            $.ajax({
+                url: "https://l08t2opoll.execute-api.us-east-1.amazonaws.com/api/getUser",
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('access-token', access_token);
+                },
+                success: function(response) {
+                    console.log(response);
+
+                    user_info = JSON.parse(response);
+                    console.log(user_info['userid']);
+                    console.log(user_info['username']);
+
+                    $("#welcome_user").show();
+                    $("#login_user").hide();
+                    $("#welcome_user #username").text(user_info['username']);
+                },
+                error: function(xhr, status, error) {
+                    console.log(error);
+                    $("#welcome_user").hide();
+                    $("#login_user").show();
+                }
+            });
+        }
+
+        function saveAccessTokenToCookie(access_token) {
+            console.log("saveAccessTokenToCookie: " + access_token);
+            localStorage.setItem("access_token", access_token);
+        }
+
+        function loadAccessTokenFromCookie() {
+            var content = localStorage.getItem("access_token");
+            console.log("loadAccessTokenFromCookie: " + content);
+            return content;
+
+        }
+
+        function deleteAccessTokenCookie() {
+            localStorage.removeItem("access_token");
+            console.log("deleteAccessTokenCookie!");
+        }
+
+        function onLogin() {
+			if (window.location.href.includes("localhost")) {
+				window.location = "https://yanlingchen-swdv691.auth.us-east-1.amazoncognito.com/login?client_id=6pahio95ne8tlpahstvt5i9hfk&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=https://localhost/index.html";
+			} else {
+				window.location = "https://yanlingchen-swdv691.auth.us-east-1.amazoncognito.com/login?client_id=6pahio95ne8tlpahstvt5i9hfk&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=http://yanling-chen-swdv691.s3-website-us-east-1.amazonaws.com/index.html"
+			}			
+        }
+
+        function onLogout() {
+            $("#welcome_user").hide();
+            $("#login_user").show();
+
+            deleteAccessTokenCookie();
+        }
+
+        // TODO Read this
+        $(document).ready(function() {
+            var access_token = getAccessTokenFromUrl();
+
+            if (access_token) {
+                saveAccessTokenToCookie(access_token);
+            } else {
+                access_token = loadAccessTokenFromCookie();
+            }
+
+            getUserInfoFromAccessToken(access_token);
+        });
+    </script>
+</head>
+
+<body>
+    <header>
+        <div class="header">
+            <h1>PASTE BOARD</h1>
+            <div id="welcome_user" style="display: none;">
+                Hi <span id="username"></span>[<a href="#" onclick="onLogout();">Logout</a>]
+            </div>
+            <div id="login_user" style="display: none;">
+                <button onclick="onLogin()">Login</button>
+            </div>
+        </div>
+    </header>
+
+    <div class="page_width">
+        <form action="#">
+            <label for="paste box" style="font-weight:bold; font-size:28px; color:orange">Paste Box...</label><br><br>
+            <textarea name="paste" id="paste" cols="100" rows="20" placeholder="Please paste here..."></textarea><br><br>
+            <div class="page_width">
+                <button type="button">Cancel</button>
+                <button type="button">Upload</button>
+                <button type="button">Add</button>
+            </div>
+        </form>
+    </div>
+</body>
+
+</html>
