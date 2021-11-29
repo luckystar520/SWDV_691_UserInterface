@@ -5,7 +5,7 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-	<meta http-equiv="Cache-control" content="no-cache">
+    <meta http-equiv="Cache-control" content="no-cache">
     <title>Paste Board</title>
     <link href="app.css" rel="stylesheet" />
 
@@ -31,11 +31,11 @@
                     access_token = href_part.substring("access_token=".length);
                 }
             }
-			
-			console.log("1234");
-			var url = window.location.href;
-			console.log(url.substring(0, url.indexOf('#')));
-			window.location = url.substring(0, url.indexOf('#'));
+
+            console.log("1234");
+            var url = window.location.href;
+            console.log(url.substring(0, url.indexOf('#')));
+            window.location = url.substring(0, url.indexOf('#'));
 
             return access_token;
         }
@@ -90,11 +90,11 @@
         }
 
         function onLogin() {
-			if (window.location.href.includes("localhost")) {
-				window.location = "https://yanlingchen-swdv691.auth.us-east-1.amazoncognito.com/login?client_id=6pahio95ne8tlpahstvt5i9hfk&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=https://localhost/index.html";
-			} else {
-				window.location = "https://yanlingchen-swdv691.auth.us-east-1.amazoncognito.com/login?client_id=6pahio95ne8tlpahstvt5i9hfk&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=http://yanling-chen-swdv691.s3-website-us-east-1.amazonaws.com/index.html"
-			}			
+            if (window.location.href.includes("localhost")) {
+                window.location = "https://yanlingchen-swdv691.auth.us-east-1.amazoncognito.com/login?client_id=6pahio95ne8tlpahstvt5i9hfk&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=https://localhost/index.html";
+            } else {
+                window.location = "https://yanlingchen-swdv691.auth.us-east-1.amazoncognito.com/login?client_id=6pahio95ne8tlpahstvt5i9hfk&response_type=token&scope=aws.cognito.signin.user.admin+email+openid+phone+profile&redirect_uri=http://yanling-chen-swdv691.s3-website-us-east-1.amazonaws.com/index.html"
+            }
         }
 
         function onLogout() {
@@ -104,7 +104,41 @@
             deleteAccessTokenCookie();
         }
 
-        // TODO Read this
+        function onPaste() {
+            console.log("onPaste");
+
+            var content = $("textarea#paste").val();
+            console.log(content);
+
+            var access_token = localStorage.getItem("access_token");
+            console.log(access_token);
+
+            var body = {
+                "content_type": "",
+                "content": content
+            };
+
+            $.ajax({
+                url: "https://bthqu5mvr7.execute-api.us-east-1.amazonaws.com/api/paste",
+                type: "POST",
+                contentType: 'application/json',
+                data: JSON.stringify(body),
+                beforeSend: function(xhr) {
+                    xhr.setRequestHeader('access-token', access_token);
+                },
+                success: function(response) {
+                    console.log("paste succeeded");
+                    console.log(response);
+                    alert("Paste succeeded");
+                },
+                error: function(xhr, status, error) {
+                    console.log("paste failed");
+                    console.log(error);
+                    alert("Fail to post your paste. Error: " + error);
+                }
+            });
+        }
+
         $(document).ready(function() {
             var access_token = getAccessTokenFromUrl();
 
@@ -137,9 +171,7 @@
             <label for="paste box" style="font-weight:bold; font-size:28px; color:orange">Paste Box...</label><br><br>
             <textarea name="paste" id="paste" cols="100" rows="20" placeholder="Please paste here..."></textarea><br><br>
             <div class="page_width">
-                <button type="button">Cancel</button>
-                <button type="button">Upload</button>
-                <button type="button">Add</button>
+                <button type="button" onClick="onPaste()">Paste</button>
             </div>
         </form>
     </div>
