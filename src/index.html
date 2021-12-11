@@ -172,30 +172,13 @@
                             " " + pasteTime.toLocaleTimeString("en-US")
                         );
 
+                        item_div.find("button").attr('onclick', `deletePaste('${item['pasteId']}')`);
+
                         item_div.find(".history_content").text(item['content']);
 
                         item_div.appendTo('#histories');
                         item_div.show();
                     }
-
-                    /*
-                    $('<td>').remove();
-                    table = "";
-                    row = "";
-
-
-                    for (var i = paste_items["items"].length - 1; i >= 0; i--) {
-                        row = paste_items["items"][i];
-                        console.log(row);
-                        table += '<tr>'
-                        for (var j in row) {
-                            console.log(row[j]);
-                            table += '<td style="padding:10px;">' + row[j] + '</td>';
-                        }
-                        table += '</tr>';
-                    }
-                    $("#history").append(table);
-                    */
                 },
                 error: function(xhr, status, error) {
                     console.log(error);
@@ -203,27 +186,34 @@
             })
         }
 
-        /*
-        function deletePaste() {
+        function deletePaste(pasteId) {
             var access_token = localStorage.getItem("access_token");
             console.log(access_token);
+
+            var body = {
+                "pasteId": pasteId
+            };
+
+            console.log(body);
+            console.log(JSON.stringify(body));
 
             $.ajax({
                 url: "https://api.sunnyrabbit.click/api/paste",
                 type: 'DELETE',
+                contentType: 'application/json',
+                data: JSON.stringify(body),
                 beforeSend: function(xhr) {
                     xhr.setRequestHeader('access-token', access_token);
                 },
                 success: function(response) {
-                    console.log(response);
-                    $("#history").text(JSON.stringify(response));
+                    console.log("Delete succeeded!");
+                    getPaste();
                 },
                 error: function(xhr, status, error) {
                     console.log(error);
                 }
             })
         }
-        */
 
         $(document).ready(function() {
             var access_token = getAccessTokenFromUrl();
@@ -272,28 +262,11 @@
                 <div class="history_content">
                     123j12opi3hp192h3p12jih3p9i1o2h3o12
                 </div>
-                <button>Delete</button>
+                <button type="button">Delete</button>
             </fieldset>
         </div>
 
-        <div id="histories">
-
-        </div>
-
-        <!--
-        <table id="history">
-            <tr>
-                <th>Content</th>
-                <th>User ID</th>
-                <th>Paste ID</th>
-                <th>Paste Time</th>
-            </tr>
-            <tr>
-                <td></td>
-            </tr>
-        </table>
-        -->
-
+        <div id="histories"></div>
     </div>
 
     <!---
