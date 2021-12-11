@@ -105,9 +105,13 @@
             $("#login_user").show();
 
             deleteAccessTokenCookie();
+
+            getPaste();
         }
 
         function postPaste() {
+            $(".loading_overlay").show();
+
             var content = $("textarea#new_paste").val();
             console.log(content);
 
@@ -133,17 +137,22 @@
                 success: function(response) {
                     console.log("Paste succeeded!");
                     //alert("Paste succeeded!");
+                    $("textarea#new_paste").val("");
 
                     getPaste();
                 },
                 error: function(xhr, status, error) {
                     console.log("Paste failed!");
-                    alert("Paste failed!");
+                    alert("Failed to add the paste");
+
+                    $(".loading_overlay").hide();
                 }
             })
         }
 
         function getPaste() {
+            $(".loading_overlay").show();
+
             var access_token = localStorage.getItem("access_token");
             console.log(access_token);
 
@@ -179,14 +188,20 @@
                         item_div.appendTo('#histories');
                         item_div.show();
                     }
+
+                    $(".loading_overlay").hide();
                 },
                 error: function(xhr, status, error) {
                     console.log(error);
+
+                    $(".loading_overlay").hide();
                 }
             })
         }
 
         function deletePaste(pasteId) {
+            $(".loading_overlay").show();
+
             var access_token = localStorage.getItem("access_token");
             console.log(access_token);
 
@@ -211,6 +226,8 @@
                 },
                 error: function(xhr, status, error) {
                     console.log(error);
+
+                    $(".loading_overlay").hide();
                 }
             })
         }
@@ -231,8 +248,8 @@
 </head>
 
 <body>
-    <header>
-        <div class="header">
+    <div class="header">
+        <div style="width: 80%; max-width: 1200px; margin: auto;">
             <h1>PASTE BOARD</h1>
             <div id="welcome_user" style="display: none">
                 Hi <span id="username"></span>[<a href="#" onclick="onLogout();">Logout</a>]
@@ -241,7 +258,7 @@
                 <button onclick="onLogin()">Login</button>
             </div>
         </div>
-    </header>
+    </div>
 
     <div class="page_width">
         <form action="#">
@@ -275,6 +292,10 @@
         <textarea name="paste_history" id="paste_history" cols="100" rows="20" placeholder="history"></textarea><br><br>
     </form>
     --->
+
+    <div class="loading_overlay" style="display: none;">
+        <div class="loading_wheel"></div>
+    </div>
 
 </body>
 

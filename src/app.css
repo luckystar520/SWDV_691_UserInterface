@@ -1,5 +1,14 @@
+html body {
+    margin: 0;
+    padding: 0;
+
+    width: 100%;
+    min-width: 400px;
+}
+
 .page_width {
-    width: 1000px;
+    width: 90%;
+    max-width: 800px;
     margin: auto;
 }
 
@@ -59,9 +68,9 @@ textarea {
 .header {
     background-color: orange;
     margin-bottom: 50px;
-    margin-top: 30px;
     padding: 20px 0 20px 20px;
     letter-spacing: 2px;
+    width: 100%;
 }
 
 .header h1 {
@@ -129,4 +138,45 @@ fieldset>legend {
 
 fieldset>legend+* {
     clear: both;
+}
+
+/* loading circle */
+.loading_overlay {
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    background-color: rgba(0,0,0,.5);
+}
+
+.loading_wheel {
+    width: 120px;
+    height: 120px;
+    margin-top: -60px;
+    margin-left: -60px;
+    
+    position: absolute;
+    top: 50%;
+    left: 50%;
+
+    border: 16px solid #f3f3f3;
+    border-radius: 50%;
+    border-top: 16px solid #3498db;
+    
+    -webkit-animation: spin 2s linear infinite; /* Safari */
+    animation: spin 2s linear infinite;
+}
+
+/* Safari */
+@-webkit-keyframes spin {
+    0% { -webkit-transform: rotate(0deg); }
+    100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+    0% { transform: rotate(0deg); }
+    100% { transform: rotate(360deg); }
 }
